@@ -1,5 +1,5 @@
 <template>
-  <div class="setup" v-if="isGame">
+  <div class="setup">
     <div class="setup-game">
       <h1 class="setup-game__title">Выберите количество игроков</h1>
       <div class="setup-game__settings players-setup">
@@ -20,7 +20,7 @@
             width="24px"
             fill="red"
             class="players-setup__icon"
-            @click="deletePlayer(index)"
+            @click="deletePlayer(player)"
             :class="{ disabled: players.length <= 2 }"
           >
             <path d="M0 0h24v24H0z" fill="none" />
@@ -51,45 +51,27 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "Setup",
   data() {
     return {
-      isGame: true,
-      idForPlayer: 3,
-      players: [
-        {
-          id: 1,
-          color:
-            "#" +
-            (Math.random().toString(16) + "000000")
-              .substring(2, 8)
-              .toUpperCase(),
-          money: 15000000,
-        },
-        {
-          id: 2,
-          color:
-            "#" +
-            (Math.random().toString(16) + "000000")
-              .substring(2, 8)
-              .toUpperCase(),
-          money: 15000000,
-        },
-      ],
+      isGameStart: false,
+      idForPlayers: 3,
     };
   },
   methods: {
     startGame() {
-      console.log("start");
-      // this.$parent.$store.commit(this.players)
+      this.isGameStart = true;
+      this.$store.dispatch("startGame", this.isGameStart);
     },
     addNewPlayer() {
       if (this.players.length === 6) {
         alert("Максимальное количество игроков: 6");
       } else {
         const newPlayer = {
-          id: this.idForPlayer,
+          id: this.idForPlayers,
+          name: "Игрок " + this.idForPlayers,
           color:
             "#" +
             (Math.random().toString(16) + "000000")
@@ -98,23 +80,33 @@ export default {
           money: 15000000,
         };
         this.players.push(newPlayer);
-        this.idForPlayer++;
+        this.idForPlayers++;
       }
+      this.$store.dispatch("getPlayers", this.players);
     },
-    deletePlayer(index) {
+    deletePlayer(playerDelete) {
       if (this.players.length === 2) {
         alert("Минимальное количество игроков: 2");
       } else {
-        this.players.splice(index, 1);
-        this.players.map((player) => {
-          if (player.id > 1) {
-            player.id--;
-          }
-        });
-        this.idForPlayer--;
+        let playerToDelete = this.$store.state.players.findIndex(
+          (player) => playerDelete.id === player.id
+        );
+        this.$store.state.players.splice(playerToDelete, 1);
       }
+      this.$store.dispatch("getPlayers", this.players);
     },
   },
+  computed: {
+    ...mapState({
+      players: (state) => state.players,
+    }),
+  },
+  // created() {
+  //   window.addEventListener("beforeunload", (event) => {
+  //     event.preventDefault();
+  //     event.returnValue = "";
+  //   });
+  // },
 };
 </script>
 

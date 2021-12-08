@@ -1,43 +1,33 @@
 <template>
-  <div class="game" @start="startGameBoard(arg)">
+  <div class="game">
     <h1 class="game-title">МОНОПОЛИЯ</h1>
     <div class="game-section">
       <div class="game-section__map">
         <img src="../assets/game.jpg" alt="game" />
-        <lobby-message></lobby-message>
-        <player-figures></player-figures>
+        <lobby-message-component></lobby-message-component>
+        <player-figures-component></player-figures-component>
       </div>
       <div class="game-section__block">
-        <players-panel></players-panel>
-        <players-trade></players-trade>
+        <players-panel-component></players-panel-component>
+        <players-trade-component></players-trade-component>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import PlayersPanel from "../components/PlayersPanel.vue";
-import LobbyMessage from "../components/LobbyMessage.vue";
-import PlayerFigures from "../components/PlayerFigures.vue";
-import PlayersTrade from "../components/PlayersTrade.vue";
+import PlayersPanelComponent from "../components/PlayersPanelComponent.vue";
+import LobbyMessageComponent from "../components/LobbyMessageComponent.vue";
+import PlayerFiguresComponent from "../components/PlayerFiguresComponent.vue";
+import PlayersTradeComponent from "../components/PlayersTradeComponent.vue";
 
 export default {
   name: "Game",
   components: {
-    PlayersPanel,
-    LobbyMessage,
-    PlayerFigures,
-    PlayersTrade,
-  },
-  data() {
-    return {
-      isGameBoard: false,
-    };
-  },
-  methods: {
-    startGameBoard(arg) {
-      console.log(arg);
-    },
+    PlayersPanelComponent,
+    LobbyMessageComponent,
+    PlayerFiguresComponent,
+    PlayersTradeComponent,
   },
 };
 </script>

@@ -13,17 +13,17 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
-  name: "LobbyMessage",
+  name: "LobbyMessageComponent",
   data() {
     return {
-      lobbyMessageWarnings: [
-        { info: "Ход игрока 1!" },
-        { info: "Ход игрока 2!" },
-        { info: "Ход игрока 3!" },
-      ],
+      lobbyMessageWarnings: this.$store.state.lobbyMessageWarnings,
     };
   },
+  ...mapState({
+    lobbyMessageWarnings: (state) => state.lobbyMessageWarnings,
+  }),
 };
 </script>
 
@@ -45,11 +45,14 @@ export default {
     background-color: #ffffff;
     overflow-y: scroll;
     text-align: left;
+    overflow-x: hidden;
   }
 
   &__box-alert {
     width: 240px;
     word-wrap: break-word;
+    margin-bottom: 10px;
+    line-height: 18px;
   }
 }
 </style>

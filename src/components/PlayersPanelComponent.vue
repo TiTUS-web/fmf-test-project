@@ -1,16 +1,12 @@
 <template>
   <div class="players-panel-container">
-    <div
-      class="players-panel"
-      v-for="(player, index) in players"
-      :key="player.id"
-    >
+    <div class="players-panel" v-for="player in players" :key="player.id">
       <div class="players-panel__block">
         <div
           class="players-panel__circle"
           :style="{ background: player.color }"
         ></div>
-        <div class="players-panel__name">Игрок&nbsp;{{ index + 1 }}</div>
+        <div class="players-panel__name">Игрок&nbsp;{{ player.id }}</div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -55,86 +51,47 @@
         </svg>
       </div>
     </div>
-    <div class="players-panel__add">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="green"
-        class="players-panel__add-icon"
-        @click="addNewPlayer"
-      >
-        <path d="M0 0h24v24H0V0z" fill="none" />
-        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-      </svg>
-    </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
-  name: "PlayersPanel",
-  data() {
-    return {
-      idForPlayer: 3,
-      players: [
-        {
-          id: 1,
-          color:
-            "#" +
-            (Math.random().toString(16) + "000000")
-              .substring(2, 8)
-              .toUpperCase(),
-          money: 15000000,
-        },
-        {
-          id: 2,
-          color:
-            "#" +
-            (Math.random().toString(16) + "000000")
-              .substring(2, 8)
-              .toUpperCase(),
-          money: 15000000,
-        },
-      ],
-    };
-  },
+  name: "PlayersPanelComponent",
   methods: {
-    addNewPlayer() {
-      if (this.players.length === 6) {
-        alert("Максимальное количество игроков: 6");
-      } else {
-        const newPlayer = {
-          id: this.idForPlayer,
-          color:
-            "#" +
-            (Math.random().toString(16) + "000000")
-              .substring(2, 8)
-              .toUpperCase(),
-          money: 15000000,
-        };
-        this.players.push(newPlayer);
-        this.idForPlayer++;
-      }
-    },
-    deletePlayer(index) {
+    deletePlayer(playerDelete) {
       if (this.players.length === 2) {
         alert("Минимальное количество игроков: 2");
       } else {
-        this.players.splice(index, 1);
-        this.players.map((player) => {
-          if (player.id > 1) {
-            player.id--;
-          }
+        let playerToDelete = this.$store.state.players.findIndex(
+          (player) => playerDelete.id === player.id
+        );
+        this.$store.state.players.splice(playerToDelete, 1);
+        this.$store.state.lobbyMessageWarnings.push({
+          info: `Игрок ${playerDelete.id} был удалён из игры`,
         });
-        this.idForPlayer--;
       }
+      this.$store.dispatch("getPlayers", this.players);
     },
     appendAmountMoney(player) {
-      player.money += 300000;
+      let trade = Math.floor(Math.random() * 500000);
+      let playerMoneyTrade = (player.money += trade);
+      this.$store.state.lobbyMessageWarnings.push({
+        info: `Игроку ${player.id} поступила сумма в размере ${trade}$, теперь у него ${playerMoneyTrade}$`,
+      });
     },
     deleteAmountMoney(player) {
-      player.money -= 300000;
+      let trade = Math.floor(Math.random() * 500000);
+      let playerMoneyTrade = (player.money -= trade);
+      this.$store.state.lobbyMessageWarnings.push({
+        info: `Игроку ${player.id} сделан вычет в размере ${trade}$, теперь у него ${playerMoneyTrade}$`,
+      });
     },
+  },
+  computed: {
+    ...mapState({
+      players: (state) => state.players,
+    }),
   },
 };
 </script>

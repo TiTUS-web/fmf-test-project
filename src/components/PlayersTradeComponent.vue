@@ -1,5 +1,6 @@
 <template>
-  <div class="players-trade" v-if="!(this.players.length === 1)">
+  <div class="players-trade">
+    <div class="players-trade__title">Транзакции</div>
     <div class="players-trade__block">
       <select
         class="players-trade__block-name players-name"
@@ -10,7 +11,7 @@
           v-for="player in players"
           :key="player.id"
           selected
-          exact
+          :style="{ color: player.color }"
         >
           {{ player.name }}
         </option>
@@ -41,7 +42,7 @@
           v-for="player in players"
           :key="player.id"
           selected
-          exact
+          :style="{ color: player.color }"
         >
           {{ player.name }}
         </option>
@@ -68,69 +69,39 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
-  name: "PlayersTrade",
+  name: "PlayersTradeComponent",
   data() {
     return {
       firstPlayer: "",
       lastPlayer: "",
       inputTrade: null,
-      players: [
-        {
-          id: 1,
-          name: "Игрок 1",
-          color:
-            "#" +
-            (Math.random().toString(16) + "000000")
-              .substring(2, 8)
-              .toUpperCase(),
-          money: 15000000,
-        },
-        {
-          id: 2,
-          name: "Игрок 2",
-          color:
-            "#" +
-            (Math.random().toString(16) + "000000")
-              .substring(2, 8)
-              .toUpperCase(),
-          money: 15000000,
-        },
-        {
-          id: 3,
-          name: "Игрок 3",
-          color:
-            "#" +
-            (Math.random().toString(16) + "000000")
-              .substring(2, 8)
-              .toUpperCase(),
-          money: 15000000,
-        },
-      ],
     };
   },
   methods: {
     playersTradeOperation(firstPlayer, lastPlayer) {
       if (firstPlayer && lastPlayer) {
         let firstPlayerTrade = this.players.find(
-          (player) => firstPlayer == player.name
+          (player) => firstPlayer === player.name
         );
         let lastPlayerTrade = this.players.find(
-          (player) => lastPlayer == player.name
+          (player) => lastPlayer === player.name
         );
 
         if (firstPlayerTrade.money <= -5000000) {
-          this.playersToDelete(firstPlayerTrade);
+          let playerToDelete = this.$store.state.players.findIndex(
+            (player) => firstPlayerTrade.id === player.id
+          );
+          this.$store.state.players.splice(playerToDelete, 1);
+          this.$store.state.lobbyMessageWarnings.push({
+            info: `Игрок ${firstPlayerTrade.id} покинул игру из-за недостатка средств`,
+          });
           alert("Игрок не может совершить перевод средств.");
           this.inputTrade = null;
         } else if (firstPlayerTrade.money <= 0) {
           firstPlayerTrade.money -= Number(this.inputTrade);
           lastPlayerTrade.money += Number(this.inputTrade);
-          this.inputTrade = null;
-        } else if (this.inputTrade) {
-          alert(
-            "Система: Транзакция не имеет смысла. Укажите корректное значение."
-          );
           this.inputTrade = null;
         } else if (firstPlayerTrade === lastPlayerTrade) {
           alert(
@@ -142,20 +113,20 @@ export default {
         } else {
           firstPlayerTrade.money -= Number(this.inputTrade);
           lastPlayerTrade.money += Number(this.inputTrade);
+          this.$store.state.lobbyMessageWarnings.push({
+            info: `Игрок ${firstPlayerTrade.id} перевел ${Number(
+              this.inputTrade
+            )}$ Игрок ${lastPlayerTrade.id}`,
+          });
           this.inputTrade = null;
         }
       }
     },
-    playersToDelete(firstPlayerTrade) {
-      if (firstPlayerTrade.money <= 0) {
-        let playerToDelete = firstPlayerTrade.id;
-        let index = this.players.find((player) => {
-          playerToDelete === player.id;
-        });
-        console.log(index);
-        this.players.splice(index, 1);
-      }
-    },
+  },
+  computed: {
+    ...mapState({
+      players: (state) => state.players,
+    }),
   },
 };
 </script>
@@ -186,6 +157,13 @@ export default {
     }
   }
 
+  &__title {
+    display: block;
+    margin-bottom: 20px;
+    font-size: 17px;
+    color: green;
+  }
+
   &__block-name {
   }
 
@@ -208,7 +186,7 @@ export default {
 }
 .players-name {
   & {
-    width: 76px;
+    width: 84px;
     border-radius: 7px;
     padding: 3px 0;
   }
