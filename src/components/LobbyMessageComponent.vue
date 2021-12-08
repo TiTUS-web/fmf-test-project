@@ -49,7 +49,7 @@ export default {
   }
 
   &__box-alert {
-    width: 240px;
+    width: 228px;
     word-wrap: break-word;
     margin-bottom: 10px;
     line-height: 18px;
