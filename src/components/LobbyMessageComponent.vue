@@ -16,14 +16,11 @@
 import { mapState } from "vuex";
 export default {
   name: "LobbyMessageComponent",
-  data() {
-    return {
-      lobbyMessageWarnings: this.$store.state.lobbyMessageWarnings,
-    };
+  computed: {
+    ...mapState({
+      lobbyMessageWarnings: (state) => state.lobbyMessageWarnings,
+    }),
   },
-  ...mapState({
-    lobbyMessageWarnings: (state) => state.lobbyMessageWarnings,
-  }),
 };
 </script>
 

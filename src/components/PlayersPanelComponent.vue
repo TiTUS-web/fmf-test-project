@@ -1,12 +1,18 @@
 <template>
   <div class="players-panel-container">
-    <div class="players-panel" v-for="player in players" :key="player.id">
+    <div
+      class="players-panel"
+      v-for="(player, index) in players"
+      :key="player.id"
+    >
       <div class="players-panel__block">
         <div
           class="players-panel__circle"
           :style="{ background: player.color }"
-        ></div>
-        <div class="players-panel__name">Игрок&nbsp;{{ player.id }}</div>
+        >
+          {{ player.id }}
+        </div>
+        <div class="players-panel__name">Игрок&nbsp;{{ index + 1 }}</div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -58,6 +64,11 @@
 import { mapState } from "vuex";
 export default {
   name: "PlayersPanelComponent",
+  computed: {
+    ...mapState({
+      players: (state) => state.players,
+    }),
+  },
   methods: {
     deletePlayer(playerDelete) {
       if (this.players.length === 2) {
@@ -67,6 +78,7 @@ export default {
           (player) => playerDelete.id === player.id
         );
         this.$store.state.players.splice(playerToDelete, 1);
+
         this.$store.state.lobbyMessageWarnings.push({
           info: `Игрок ${playerDelete.id} был удалён из игры`,
         });
@@ -87,11 +99,6 @@ export default {
         info: `Игроку ${player.id} сделан вычет в размере ${trade}$, теперь у него ${playerMoneyTrade}$`,
       });
     },
-  },
-  computed: {
-    ...mapState({
-      players: (state) => state.players,
-    }),
   },
 };
 </script>
@@ -119,8 +126,8 @@ export default {
   }
 
   &__circle {
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
     background: black;
     border-radius: 50%;
     margin-right: 10px;

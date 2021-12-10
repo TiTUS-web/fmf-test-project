@@ -7,6 +7,10 @@
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles&display=swap");
 
+body {
+  margin: 0;
+}
+
 #app {
   font-family: "Fuzzy Bubbles", cursive;
   text-align: center;

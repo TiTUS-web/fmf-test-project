@@ -116,7 +116,7 @@ export default {
           this.$store.state.lobbyMessageWarnings.push({
             info: `Игрок ${firstPlayerTrade.id} перевел ${Number(
               this.inputTrade
-            )}$ Игрок ${lastPlayerTrade.id}`,
+            )}$ Игроку ${lastPlayerTrade.id}`,
           });
           this.inputTrade = null;
         }

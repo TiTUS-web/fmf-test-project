@@ -5,6 +5,7 @@
       <div class="setup-game__settings players-setup">
         <div
           class="players-setup__player"
+          :v-model="idForPlayers"
           v-for="(player, index) in players"
           :key="index"
         >
@@ -57,7 +58,7 @@ export default {
   data() {
     return {
       isGameStart: false,
-      idForPlayers: 3,
+      idForPlayers: this.$store.state.idForPlayers,
     };
   },
   methods: {
@@ -101,12 +102,6 @@ export default {
       players: (state) => state.players,
     }),
   },
-  // created() {
-  //   window.addEventListener("beforeunload", (event) => {
-  //     event.preventDefault();
-  //     event.returnValue = "";
-  //   });
-  // },
 };
 </script>
 

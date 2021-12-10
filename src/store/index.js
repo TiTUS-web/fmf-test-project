@@ -1,11 +1,21 @@
 import Vue from "vue";
 import Vuex from "vuex";
 // import createPersistedState from "vuex-persistedstate";
+// import * as Cookies from "js-cookie";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  // plugins: [createPersistedState()],
+  // plugins: [
+  //   createPersistedState({
+  //     storage: {
+  //       getItem: (key) => Cookies.get(key),
+  //       setItem: (key, value) =>
+  //         Cookies.set(key, value, { expires: 3, secure: true }),
+  //       removeItem: (key) => Cookies.remove(key),
+  //     },
+  //   }),
+  // ],
   state: {
     isGameStart: false,
     idForPlayers: 3,
@@ -34,10 +44,6 @@ export default new Vuex.Store({
       Vue.set(state, "players", players);
     },
     startGameSetup: (state, isGameStart) => {
-      state.isGameStart = isGameStart;
-    },
-    getIdForPlayers: (state, isGameStart) => {
-      // Vue.set(state, "isGameStart", isGameStart);
       state.isGameStart = isGameStart;
     },
   },
