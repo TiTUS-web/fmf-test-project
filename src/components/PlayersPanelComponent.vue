@@ -57,6 +57,17 @@
         </svg>
       </div>
     </div>
+    <div class="players-panel__add">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        class="players-panel__add-icon"
+        @click="addNewPlayer"
+      >
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+      </svg>
+    </div>
   </div>
 </template>
 
@@ -68,8 +79,35 @@ export default {
     ...mapState({
       players: (state) => state.players,
     }),
+    idForPlayers: {
+      get() {
+        return this.$store.state.idForPlayers;
+      },
+      set(value) {
+        this.$store.commit("getIdForPlayers", value);
+      },
+    },
   },
   methods: {
+    addNewPlayer() {
+      if (this.players.length === 6) {
+        alert("Максимальное количество игроков: 6");
+      } else {
+        const newPlayer = {
+          id: this.idForPlayers,
+          name: "Игрок " + this.idForPlayers,
+          color:
+            "#" +
+            (Math.random().toString(16) + "000000")
+              .substring(2, 8)
+              .toUpperCase(),
+          money: 15000000,
+        };
+        this.players.push(newPlayer);
+        this.idForPlayers++;
+      }
+      this.$store.dispatch("getPlayers", this.players);
+    },
     deletePlayer(playerDelete) {
       if (this.players.length === 2) {
         alert("Минимальное количество игроков: 2");
@@ -79,7 +117,7 @@ export default {
         );
         this.$store.state.players.splice(playerToDelete, 1);
 
-        this.$store.state.lobbyMessageWarnings.push({
+        this.$store.state.lobbyMessageWarnings.unshift({
           info: `Игрок ${playerDelete.id} был удалён из игры`,
         });
       }
@@ -88,14 +126,14 @@ export default {
     appendAmountMoney(player) {
       let trade = Math.floor(Math.random() * 500000);
       let playerMoneyTrade = (player.money += trade);
-      this.$store.state.lobbyMessageWarnings.push({
+      this.$store.state.lobbyMessageWarnings.unshift({
         info: `Игроку ${player.id} поступила сумма в размере ${trade}$, теперь у него ${playerMoneyTrade}$`,
       });
     },
     deleteAmountMoney(player) {
       let trade = Math.floor(Math.random() * 500000);
       let playerMoneyTrade = (player.money -= trade);
-      this.$store.state.lobbyMessageWarnings.push({
+      this.$store.state.lobbyMessageWarnings.unshift({
         info: `Игроку ${player.id} сделан вычет в размере ${trade}$, теперь у него ${playerMoneyTrade}$`,
       });
     },
@@ -162,6 +200,7 @@ export default {
       width: 35px;
       margin-left: 7px;
       cursor: pointer;
+      fill: rgb(26, 188, 156);
     }
   }
 

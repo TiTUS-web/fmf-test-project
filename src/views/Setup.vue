@@ -58,7 +58,6 @@ export default {
   data() {
     return {
       isGameStart: false,
-      idForPlayers: this.$store.state.idForPlayers,
     };
   },
   methods: {
@@ -101,6 +100,14 @@ export default {
     ...mapState({
       players: (state) => state.players,
     }),
+    idForPlayers: {
+      get() {
+        return this.$store.state.idForPlayers;
+      },
+      set(value) {
+        this.$store.commit("getIdForPlayers", value);
+      },
+    },
   },
 };
 </script>

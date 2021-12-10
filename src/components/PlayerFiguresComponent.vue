@@ -18,11 +18,6 @@ export default {
   computed: {
     ...mapState({
       players: (state) => state.players,
-      data() {
-        return {
-          idForPlayers: 3,
-        };
-      },
     }),
   },
 };

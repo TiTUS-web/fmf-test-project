@@ -94,7 +94,7 @@ export default {
             (player) => firstPlayerTrade.id === player.id
           );
           this.$store.state.players.splice(playerToDelete, 1);
-          this.$store.state.lobbyMessageWarnings.push({
+          this.$store.state.lobbyMessageWarnings.unshift({
             info: `Игрок ${firstPlayerTrade.id} покинул игру из-за недостатка средств`,
           });
           alert("Игрок не может совершить перевод средств.");
@@ -113,7 +113,7 @@ export default {
         } else {
           firstPlayerTrade.money -= Number(this.inputTrade);
           lastPlayerTrade.money += Number(this.inputTrade);
-          this.$store.state.lobbyMessageWarnings.push({
+          this.$store.state.lobbyMessageWarnings.unshift({
             info: `Игрок ${firstPlayerTrade.id} перевел ${Number(
               this.inputTrade
             )}$ Игроку ${lastPlayerTrade.id}`,
@@ -200,3 +200,4 @@ export default {
   }
 }
 </style>
+
